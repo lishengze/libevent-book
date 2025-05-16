@@ -163,7 +163,8 @@ void recvdata(int fd, int events, void *arg)
     return;
 }
 
-void senddata(int fd, int events, void *arg)
+void 
+(int fd, int events, void *arg)
 {
     struct myevent_s *ev = (struct myevent_s *)arg;
     int len;
