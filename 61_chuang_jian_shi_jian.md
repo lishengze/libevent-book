@@ -26,16 +26,13 @@ what 参数是上述标志的集合。
 
 如果 fd 非负,则它是将被观察其读写事件的文件。
 
-事件被激活时, libevent 将调用 cb 函数, 
+事件被激活时, libevent 将调用 cb 函数,
 
 传递这些参数:文件描述符 fd,表示所有被触发事件的位字段 ,以及构造事件时的 arg 参数。
 
-
 发生内部错误,或者传入无效参数时, event_new()将返回 NULL。
 
-
->所有新创建的事件都处于已初始化和非未决状态 ,调用 event_add()可以使其成为未决的。
-
+> 所有新创建的事件都处于已初始化和非未决状态 ,调用 event_add()可以使其成为未决的。
 
 要释放事件,调用 event_free()。对未决或者激活状态的事件调用 event_free()是安全 的:在释放事件之前,函数将会使事件成为非激活和非未决的。
 
@@ -78,7 +75,6 @@ void main_loop(evutil_socket_t fd1, evutil_socket_t fd2)
 
 上述函数定义在 <event2/event.h> 中,首次出现在 libevent 2.0.1-alpha 版本中。 event_callback_fn 类型首次在2.0.4-alpha 版本中作为 typedef 出现。
 
-
 ## 6.1.2 事件标志
 
 * EV_TIMEOUT
@@ -94,25 +90,20 @@ void main_loop(evutil_socket_t fd1, evutil_socket_t fd2)
 表示指定的文件描述符已经就绪,可以写入的时候,事件将成为激活的。
 
 * EV_SIGNAL
-用于实现信号检测,请看下面的 “构造信号事件”节。
-
+  用于实现信号检测,请看下面的 “构造信号事件”节。
 * EV_PERSIST
-表示事件是“持久的”,请看下面的“关于事件持久性”节。
-
+  表示事件是“持久的”,请看下面的“关于事件持久性”节。
 * EV_ET
 
 表示如果底层的 event_base 后端支持边沿触发事件,则事件应该是边沿触发的。这个标志 影响 EV_READ 和 EV_WRITE 的语义。
 
-
 从2.0.1-alpha 版本开始,可以有任意多个事件因为同样的条件而未决。比如说,可以有两 个事件因为某个给定的 fd 已经就绪,可以读取而成为激活的。这种情况下,多个事件回调 被执行的次序是不确定的。
 
->这些标志定义在<event2/event.h>中。除了 EV_ET 在2.0.1-alpha 版本中引入外,所有标志 从1.0版本开始就存在了。
-
+> 这些标志定义在<event2/event.h>中。除了 EV_ET 在2.0.1-alpha 版本中引入外,所有标志 从1.0版本开始就存在了。
 
 ## 6.1.3 关于事件持久性
 
-默认情况下,每当未决事件成为激活的(因为 fd 已经准备好读取或者写入,或者因为超时), 事件将在其回调被执行前成为非未决的。如果想让事件再次成为未决的 ,可以在回调函数中 再次对其调用 event_add()。
-
+默认情况下,每当未**决事件成为激活的(因为 fd 已经准备好读取或者写入,或者因为超时), 事件将在其回调被执行前成为非未决的。如果想让事件再次成为未决的 ,可以在回调函数中 再次对其调**用 event_add()。
 
 然而,如果设置了 EV_PERSIST 标志,事件就是持久的。这意味着即使其回调被激活 ,事件还是会保持为未决状态 。如果想在回调中让事件成为非未决的 ,可以对其调用 event_del ()。
 
@@ -122,6 +113,7 @@ void main_loop(evutil_socket_t fd1, evutil_socket_t fd2)
 * 从最后一次成为激活的开始,已经逝去 5秒
 
 ## 6.1.4 信号事件
+
 libevent 也可以监测 POSIX 风格的信号。要构造信号处理器,使用:
 
 ```cpp
@@ -131,8 +123,8 @@ libevent 也可以监测 POSIX 风格的信号。要构造信号处理器,使用
 
 除了提供一个信号编号代替文件描述符之外,各个参数与 event_new()相同。
 
-
 ###实例
+
 ```cpp
 struct event *hup_event;
 struct event_base *base = event_base_new();
@@ -141,8 +133,7 @@ struct event_base *base = event_base_new();
 hup_event = evsignal_new(base, SIGHUP, sighup_function, NULL);
 ```
 
->注意 :信号回调是信号发生后在事件循环中被执行的,所以可以安全地调用通常不能 在 POSIX 风格信号处理器中使用的函数。
-
+> 注意 :信号回调是信号发生后在事件循环中被执行的,所以可以安全地调用通常不能 在 POSIX 风格信号处理器中使用的函数。
 
 **`警告`:不要在信号事件上设置超时,这可能是不被支持的。 [待修正:真是这样的吗?]**
 
@@ -156,6 +147,7 @@ libevent 也提供了一组方便使用的宏用于处理信号事件:
 #define evsignal_pending(ev, what, tv_out) \
     event_pending((ev), (what), (tv_out))
 ```
+
 evsignal_*宏从2.0.1-alpha 版本开始存在。先前版本中这些宏叫做 signal_add()、signal_del ()等等。
 
 ### 关于信号的警告
